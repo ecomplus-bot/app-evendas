@@ -1,4 +1,5 @@
 const axios = require('axios')
+const { firestore } = require('firebase-admin')
 
 // read configured E-Com Plus app data
 const getAppData = require('./../../lib/store-api/get-app-data')
@@ -54,7 +55,23 @@ exports.post = ({ appSdk }, req, res) => {
                         customer = response.data
                       }
                     } else {
-                      return res.sendStatus(501)
+                      const documentRef = firestore().doc(`cart_to_add/${cart._id}`)
+                      const msDate = new Date().getTime() + abandonedCartDelay
+                      await documentRef.set({
+                        data: {
+                          storeId,
+                          trigger,
+                          [resource.slice(0, -1)]: cart,
+                          customer
+                        },
+                        url,
+                        storeId,
+                        sendAt: firestore.Timestamp.fromDate(new Date(msDate))
+                      })
+                      return res.send({
+                        status: 400,
+                        text: 'Waiting to send'
+                      })
                     }
                   } else {
                     return res.sendStatus(204)
