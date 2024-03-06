@@ -35,7 +35,7 @@ module.exports = async ({ appSdk }) => {
         method: 'post',
         url,
         data
-      }).then(({ status, data }) => {
+      }).then(async ({ status, data }) => {
         console.log(`> ${status}`, JSON.stringify(data))
         await docs[i].ref.delete()
       })
