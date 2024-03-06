@@ -16,7 +16,7 @@ module.exports = async ({ appSdk }) => {
     const cartId = docs[i].ref.id
     let cart
     try {
-      cart = (await appSdk.apiRequest(storeId, `/orders/${cartId}.json`)).response.data
+      cart = (await appSdk.apiRequest(storeId, `/carts/${cartId}.json`)).response.data
     } catch (error) {
       const status = error.response?.status
       if (status > 400 && status < 500) {
