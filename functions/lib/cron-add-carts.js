@@ -13,7 +13,9 @@ module.exports = async ({ appSdk }) => {
 
   for (let i = 0; i < docs.length; i++) {
     const { storeId, data, url } = docs[i].data()
+    console.log(storeId, url)
     const cartId = docs[i].ref.id
+    console.log('cart id', cartId)
     let cart
     try {
       cart = (await appSdk.apiRequest(storeId, `/carts/${cartId}.json`)).response.data
@@ -30,6 +32,7 @@ module.exports = async ({ appSdk }) => {
     }
 
     if (cart && !cart.completed) {
+      console.log('cart before send', cart.items && cart.items.length, 'index:', i)
       data.cart = cart
       return axios({
         method: 'post',
@@ -38,8 +41,10 @@ module.exports = async ({ appSdk }) => {
       }).then(async ({ status, data }) => {
         console.log(`> ${status}`, JSON.stringify(data))
         await docs[i].ref.delete()
+        console.log('foi excluido', storeId)
       })
     }
+    console.log('index after delete', i, storeId)
     await docs[i].ref.delete()
   }
 }
