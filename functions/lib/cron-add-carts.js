@@ -21,11 +21,13 @@ module.exports = async ({ appSdk }) => {
       cart = (await appSdk.apiRequest(storeId, `/carts/${cartId}.json`)).response.data
     } catch (error) {
       const status = error.response?.status
+      await docs[i].ref.delete()
       if (status > 400 && status < 500) {
         logger.warn(`failed reading cart ${cartId} for #${storeId}`, {
           status,
           response: error.response.data
         })
+
       } else {
         throw error
       }
