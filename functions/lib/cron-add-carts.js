@@ -7,6 +7,7 @@ module.exports = async ({ appSdk }) => {
   const snapshot = await firestore().collection('cart_to_add')
     .where('sendAt', '<=', d)
     .orderBy('sendAt')
+    .limit(100)
     .get()
   const { docs } = snapshot
   logger.info(`${docs.length} carts to add`)
