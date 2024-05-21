@@ -27,21 +27,17 @@ module.exports = async ({ appSdk }) => {
           status,
           response: error.response.data
         })
-
-      } else {
-        throw error
       }
     }
     console.log('cart before send', cart.completed, 'index:', i, 'store', storeId, 'url', url)
     if (cart && !cart.completed) {
       data.cart = cart
-      return axios({
+      await axios({
         method: 'post',
         url,
         data
       }).then(async ({ status, data }) => {
         console.log(`> ${status}`, JSON.stringify(data))
-        await docs[i].ref.delete()
       })
     }
     await docs[i].ref.delete()
