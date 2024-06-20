@@ -75,6 +75,9 @@ exports.post = ({ appSdk }, req, res) => {
                   } else {
                     return res.sendStatus(204)
                   }
+                } else if (resource === 'orders') {
+                  const order = response.data
+                  customer = order.buyers && order.buyers[0]
                 }
                 console.log(`> Sending ${resource} notification`)
                 const data = {
@@ -82,9 +85,6 @@ exports.post = ({ appSdk }, req, res) => {
                   trigger,
                   [resource.slice(0, -1)]: response.data,
                   customer
-                }
-                if (storeId === 1445) {
-                  console.log(JSON.stringify(data))
                 }
                 return axios({
                   method: 'post',
